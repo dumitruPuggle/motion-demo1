@@ -1,0 +1,46 @@
+{
+  "projectName": "motion-demo1",
+  "prompt": "Generate the text \"Hello world\" with world in yellow highlighting. Black text, white background. That words should be shown next to each other in the center of the screen. Animation: Let the words fade in from left to right and then highlight \"world\" yellow. Mimic a typewriter effect for the text appearance with a blinking cursor at the end of the text.",
+  "summary": "Generated initial animation code.",
+  "timestamp": 1772045753802,
+  "model": "gpt-5.2",
+  "skills": [
+    "typography",
+    "transitions"
+  ],
+  "conversationMessages": [
+    {
+      "id": "user-1772045729415",
+      "role": "user",
+      "content": "Generate the text \"Hello world\" with world in yellow highlighting. Black text, white background. That words should be shown next to each other in the center of the screen. Animation: Let the words fade in from left to right and then highlight \"world\" yellow. Mimic a typewriter effect for the text appearance with a blinking cursor at the end of the text.",
+      "timestamp": 1772045729415
+    },
+    {
+      "id": "assistant-1772045753802",
+      "role": "assistant",
+      "content": "Generated initial animation code.",
+      "timestamp": 1772045753802,
+      "codeSnapshot": "import React from \"react\";\nimport {\n\tAbsoluteFill,\n\tinterpolate,\n\tuseCurrentFrame,\n\tuseVideoConfig,\n} from \"remotion\";\n\nconst FONT_FAMILY = \"Inter, sans-serif\";\n\nconst clamp01 = (v: number) => Math.max(0, Math.min(1, v));\n\nconst TypingText: React.FC<{\n\ttext: string;\n\tstartFrame: number;\n\ttypeDurationInFrames: number;\n\tcharsFadeInFrames?: number;\n\tstyle?: React.CSSProperties;\n}> = ({ text, startFrame, typeDurationInFrames, charsFadeInFrames = 4, style }) => {\n\tconst frame = useCurrentFrame();\n\n\tconst t = clamp01((frame - startFrame) / Math.max(1, typeDurationInFrames));\n\tconst rawCount = t * text.length;\n\tconst visibleCount = Math.floor(rawCount);\n\n\tconst shown = text.slice(0, visibleCount);\n\tconst nextChar = text.slice(visibleCount, visibleCount + 1);\n\n\tconst nextCharProgress = rawCount - visibleCount; // 0..1\n\tconst nextCharOpacity = interpolate(\n\t\tnextCharProgress,\n\t\t[0, 1],\n\t\t[0, 1],\n\t\t{ extrapolateLeft: \"clamp\", extrapolateRight: \"clamp\" }\n\t);\n\n\t// Subtle per-character fade-in feel (left -> right) by giving the newest char a short fade.\n\tconst charOpacity = interpolate(\n\t\tframe,\n\t\t[startFrame, startFrame + typeDurationInFrames],\n\t\t[0.9, 1],\n\t\t{ extrapolateLeft: \"clamp\", extrapolateRight: \"clamp\" }\n\t);\n\n\treturn (\n\t\t<span style={{ ...style, opacity: charOpacity }}>\n\t\t\t<span style={{ whiteSpace: \"pre\" }}>{shown}</span>\n\t\t\t{nextChar ? (\n\t\t\t\t<span style={{ whiteSpace: \"pre\", opacity: nextCharOpacity }}>\n\t\t\t\t\t{nextChar}\n\t\t\t\t</span>\n\t\t\t) : null}\n\t\t</span>\n\t);\n};\n\nexport const HelloWorldTypewriter: React.FC = () => {\n\tconst frame = useCurrentFrame();\n\tconst { fps } = useVideoConfig();\n\n\tconst start = 10;\n\n\t// Timing\n\tconst helloType = Math.round(0.55 * fps);\n\tconst spaceType = Math.round(0.12 * fps);\n\tconst worldType = Math.round(0.6 * fps);\n\n\tconst helloStart = start;\n\tconst spaceStart = helloStart + helloType;\n\tconst worldStart = spaceStart + spaceType;\n\n\tconst fullDone = worldStart + worldType;\n\n\t// Cursor blinking\n\tconst blinkSpeed = Math.round(fps / 6); // ~6 blinks/sec\n\tconst cursorOn = Math.floor(frame / Math.max(1, blinkSpeed)) % 2 === 0;\n\n\t// Highlight after \"world\" typed\n\tconst highlightStart = fullDone + Math.round(0.2 * fps);\n\tconst highlightDur = Math.round(0.35 * fps);\n\tconst highlightProgress = interpolate(\n\t\tframe,\n\t\t[highlightStart, highlightStart + highlightDur],\n\t\t[0, 1],\n\t\t{ extrapolateLeft: \"clamp\", extrapolateRight: \"clamp\" }\n\t);\n\n\tconst worldBgAlpha = interpolate(highlightProgress, [0, 1], [0, 1], {\n\t\textrapolateLeft: \"clamp\",\n\t\textrapolateRight: \"clamp\",\n\t});\n\n\tconst worldTextAlpha = interpolate(highlightProgress, [0, 1], [1, 1], {\n\t\textrapolateLeft: \"clamp\",\n\t\textrapolateRight: \"clamp\",\n\t});\n\n\tconst baseTextStyle: React.CSSProperties = {\n\t\tfontFamily: FONT_FAMILY,\n\t\tfontWeight: 700,\n\t\tletterSpacing: -0.5,\n\t\tfontSize: 120,\n\t\tlineHeight: 1.05,\n\t\tcolor: \"#111\",\n\t};\n\n\tconst containerStyle: React.CSSProperties = {\n\t\tdisplay: \"flex\",\n\t\talignItems: \"center\",\n\t\tjustifyContent: \"center\",\n\t\twidth: \"100%\",\n\t\theight: \"100%\",\n\t\tbackgroundColor: \"#fff\",\n\t};\n\n\tconst lineStyle: React.CSSProperties = {\n\t\tdisplay: \"flex\",\n\t\talignItems: \"baseline\",\n\t\tjustifyContent: \"center\",\n\t\tgap: 0,\n\t};\n\n\tconst worldStyle: React.CSSProperties = {\n\t\tpadding: \"0.06em 0.14em\",\n\t\tborderRadius: \"0.14em\",\n\t\tbackgroundColor: `rgba(255, 215, 0, ${worldBgAlpha})`,\n\t\tcolor: `rgba(0, 0, 0, ${worldTextAlpha})`,\n\t};\n\n\tconst cursorStyle: React.CSSProperties = {\n\t\tdisplay: \"inline-block\",\n\t\twidth: \"0.12em\",\n\t\theight: \"0.95em\",\n\t\tbackgroundColor: \"#111\",\n\t\tmarginLeft: \"0.08em\",\n\t\ttransform: \"translateY(0.06em)\",\n\t\topacity:\n\t\t\tframe < start\n\t\t\t\t? 0\n\t\t\t\t: frame >= fullDone\n\t\t\t\t\t? cursorOn\n\t\t\t\t\t\t? 1\n\t\t\t\t\t\t: 0\n\t\t\t\t\t: 1,\n\t\ttransition: \"opacity 100ms linear\",\n\t};\n\n\t// Responsive downscale for smaller widths (safe for landscape)\n\tconst scale = interpolate(frame, [0, 1], [1, 1]);\n\tconst wrapperStyle: React.CSSProperties = {\n\t\ttransform: `scale(${scale})`,\n\t\ttransformOrigin: \"center\",\n\t\tpadding: 80,\n\t};\n\n\treturn (\n\t\t<AbsoluteFill style={containerStyle}>\n\t\t\t<div style={wrapperStyle}>\n\t\t\t\t<div style={lineStyle}>\n\t\t\t\t\t<TypingText\n\t\t\t\t\t\ttext={\"Hello\"}\n\t\t\t\t\t\tstartFrame={helloStart}\n\t\t\t\t\t\ttypeDurationInFrames={helloType}\n\t\t\t\t\t\tstyle={baseTextStyle}\n\t\t\t\t\t/>\n\t\t\t\t\t<TypingText\n\t\t\t\t\t\ttext={\" \"}\n\t\t\t\t\t\tstartFrame={spaceStart}\n\t\t\t\t\t\ttypeDurationInFrames={spaceType}\n\t\t\t\t\t\tstyle={baseTextStyle}\n\t\t\t\t\t/>\n\t\t\t\t\t<span style={{ ...baseTextStyle, ...worldStyle }}>\n\t\t\t\t\t\t<TypingText\n\t\t\t\t\t\t\ttext={\"world\"}\n\t\t\t\t\t\t\tstartFrame={worldStart}\n\t\t\t\t\t\t\ttypeDurationInFrames={worldType}\n\t\t\t\t\t\t\tstyle={{ color: \"inherit\" }}\n\t\t\t\t\t\t/>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span style={cursorStyle} />\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</AbsoluteFill>\n\t);\n};\n\nexport default HelloWorldTypewriter;",
+      "metadata": {
+        "skills": [
+          "typography",
+          "transitions"
+        ],
+        "edit_type": "full_replacement",
+        "model": "gpt-5.2",
+        "edits": null,
+        "imported_interface": null,
+        "attached_image_urls": [],
+        "imported_scene_graph": null,
+        "format": "landscape",
+        "font_family": "Inter, sans-serif",
+        "template_id": null
+      }
+    }
+  ],
+  "format": "landscape",
+  "snapshotId": "1772045753802-10f86505",
+  "commitName": "generation: Generated initial animation code.",
+  "assetPaths": [],
+  "savedAtIso": "2026-02-25T18:55:54.456Z"
+}

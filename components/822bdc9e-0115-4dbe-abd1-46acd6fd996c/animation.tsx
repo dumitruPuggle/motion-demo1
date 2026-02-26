@@ -326,14 +326,10 @@ export const SimpleRagAgentCard: React.FC = () => {
 	return (
 		<AbsoluteFill
 			style={{
-				background:
-					"radial-gradient(1200px 700px at 30% 10%, rgba(55,95,255,0.08), rgba(0,0,0,0) 55%), linear-gradient(180deg, #0a0f28 0%, #070b1f 100%)",
 				fontFamily:
 					"ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'",
 			}}
 		>
-			<BackgroundGrid />
-
 			<CardShell>
 				<CardGlowOverlay />
 				<CardHeader />

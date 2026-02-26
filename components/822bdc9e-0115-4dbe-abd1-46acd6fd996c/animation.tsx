@@ -324,11 +324,11 @@ const CardShell: React.FC<React.PropsWithChildren> = ({children}) => {
 
 export const SimpleRagAgentCard: React.FC = () => {
 	return (
-			<CardShell>
-				<CardGlowOverlay />
-				<CardHeader />
-				<CardDivider />
-				<CardMeta />
-			</CardShell>
+		<CardShell>
+			<CardGlowOverlay />
+			<CardHeader />
+			<CardDivider />
+			<CardMeta />
+		</CardShell>
 	);
 };

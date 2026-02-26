@@ -307,7 +307,7 @@ const CardShell: React.FC<React.PropsWithChildren> = ({children}) => {
 				left: 70,
 				top: 70,
 				width: 738,
-				height: 550,
+				height: 600,
 				borderRadius: 32,
 				background:
 					"linear-gradient(180deg, rgba(18,26,62,0.92) 0%, rgba(12,17,43,0.95) 100%)",

@@ -382,7 +382,7 @@ const PanelHintText: React.FC = () => (
 );
 
 const AgentSwarmChip: React.FC = () => (
-	<div style={{position: "absolute", left: 36, bottom: 58}}>
+	<div style={{position: "absolute", left: 36, bottom: 34}}>
 		<div
 			style={{
 				display: "inline-flex",
@@ -425,7 +425,7 @@ const PanelActions: React.FC = () => (
 		style={{
 			position: "absolute",
 			right: 34,
-			bottom: 54,
+			bottom: 30,
 			display: "flex",
 			alignItems: "center",
 			gap: 18,

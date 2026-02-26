@@ -375,10 +375,36 @@ const PanelHintText: React.FC = () => (
 			fontSize: 30,
 			fontWeight: 500,
 			fontFamily: FONT_FAMILY,
+			display: "inline-flex",
+			alignItems: "baseline",
+			gap: 8,
 		}}
 	>
-		Ask Agent Swarm to create a
+		<div>Ask Agent Swarm to create a</div>
+		<BlinkingCaret />
 	</div>
+);
+
+const BlinkingCaret: React.FC = () => (
+	<>
+		<style>{`
+			@keyframes caretBlink {
+				0%, 49% { opacity: 1; }
+				50%, 100% { opacity: 0; }
+			}
+		`}</style>
+		<div
+			style={{
+				width: 3,
+				height: 30,
+				borderRadius: 2,
+				background: "rgba(210,220,245,0.55)",
+				boxShadow: "0 0 18px rgba(210,220,245,0.25)",
+				transform: "translateY(3px)",
+				animation: "caretBlink 1s step-end infinite",
+			}}
+		/>
+	</>
 );
 
 const AgentSwarmChip: React.FC = () => (

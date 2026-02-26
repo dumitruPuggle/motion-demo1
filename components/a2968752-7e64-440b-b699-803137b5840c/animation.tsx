@@ -380,10 +380,7 @@ const PanelHintText: React.FC = () => (
 			gap: 8,
 		}}
 	>
-		<div>
-			Ask Agent Swarm to create a complete launch plan — research, slides, docs,
-			creative assets, and a short product video.
-		</div>
+		<div>Ask Agent Swarm to build a launch plan.</div>
 		<BlinkingCaret />
 	</div>
 );

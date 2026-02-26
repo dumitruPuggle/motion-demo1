@@ -456,7 +456,7 @@ const Title: React.FC = () => (
 			textShadow: "0 6px 30px rgba(0,0,0,0.55)",
 		}}
 	>
-		What should we build?
+		Hello world
 	</div>
 );
 

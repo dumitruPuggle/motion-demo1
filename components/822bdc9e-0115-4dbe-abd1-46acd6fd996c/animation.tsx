@@ -324,18 +324,11 @@ const CardShell: React.FC<React.PropsWithChildren> = ({children}) => {
 
 export const SimpleRagAgentCard: React.FC = () => {
 	return (
-		<AbsoluteFill
-			style={{
-				fontFamily:
-					"ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'",
-			}}
-		>
 			<CardShell>
 				<CardGlowOverlay />
 				<CardHeader />
 				<CardDivider />
 				<CardMeta />
 			</CardShell>
-		</AbsoluteFill>
 	);
 };
